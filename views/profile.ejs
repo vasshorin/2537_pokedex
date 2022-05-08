@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/index.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1> Hi there!
+        <!-- Create a menu -->
+        <ul>
+            <li><a href="../public/index.html">Home</a></li>
+            <li><a href="../public/search.html">Search</a></li>
+            <li><a href="../public/profile.html">Profile</a></li>
+        </ul>
+        <!-- make a card with the following params -->
+
+        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);" >
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/<%= id %>.png" alt="">
+            <progress id="file" value="<%= hp %>" max="255"> <%= hp %>% </progress>
+            <div class="card-body">
+                <% if (type === "grass") { %>
+                    <p class="card-text" style="color: green">  <%= type %></p>
+                    <% } else if (type === "water") { %>
+                    <p class="card-text" style="color: blue">  <%= type %></p>
+                    <% } else if (type === "electric") { %>
+                    <p class="card-text" style="color: yellow"> <%= type %></p>
+                    <% } else if (type === "fire") { %>
+                    <p class="card-text" style="color: red"> <%= type %></p>
+                    <% } else { %>
+                    <p class="card-text" style="color: grey">  <%= type %></p>
+                    <% } %>
+                <h5 class="card-title">Name: <%= name %></h5>
+                <p class="card-text">ID: <%= id %></p>
+               
+
+                <p class="card-text">HP: <%= hp %></p>
+                <p class="card-text">Attack: <%= attack %></p>
+                <p class="card-text">Defense: <%= defense %></p>
+                <p class="card-text">Speed: <%= speed %></p>
+                <p class="card-text">Special Attack: <%= specialAttack %></p>
+                <p class="card-text">Special Defense: <%= specialDefense %></p>
+                <p class="card=text">description: <%= description %></p>
+                
+
+                
+
+            </div>
+        </div>
+    
+
+    </h1>
+</body>
+
+</html>
