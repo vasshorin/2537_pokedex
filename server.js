@@ -48,6 +48,9 @@ app.get('/profile/:id', function (req, res) {
                 "speed": data.stats[0].base_stat,
                 "specialAttack": data.stats[2].base_stat,
                 "specialDefense": data.stats[1].base_stat,
+                "maxhp": data.stats[5].base_stat,
+                "ability": data.abilities[0].ability.name
+            })
                 // "summary": data.species.flavor_text_entries[0].flavor_text
             });
         })
@@ -64,7 +67,6 @@ app.get('/profile/:id', function (req, res) {
     //     "k3": "v1"
 
     // })
-})
 
 
 // app.get('/', function(req, res) {

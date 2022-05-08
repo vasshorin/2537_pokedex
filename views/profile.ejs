@@ -5,18 +5,41 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../public/index.css">
+    <link rel="stylesheet" href="/profile.css">
     <title>Document</title>
 </head>
 
 <body>
-    <h1> Hi there!
-        <!-- Create a menu -->
-        <ul>
-            <li><a href="../public/index.html">Home</a></li>
-            <li><a href="../public/search.html">Search</a></li>
-            <li><a href="../public/profile.html">Profile</a></li>
+    <header>
+        <h1>Pokemon searching mechanism</h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/640px-International_Pok%C3%A9mon_logo.svg.png" alt="">
+    </header>
+    <nav>
+        <div id="left_side">
+            <a href="/public/index.html">
+                Home
+            </a>
+    
+            <a href="#">
+                About
+            </a>
+    
+            <a href=""image_group">
+                Gallery
+            </a>
+        </div>
+
+        <div id="right_side">
+            <a href="search.html" style="float: right;">
+                Search
+            </a>
+        </div>
+      
+
         </ul>
+    </nav>
+    <h1> Hi there!
+
         <!-- make a card with the following params -->
 
         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);" >
@@ -24,7 +47,7 @@
             <progress id="file" value="<%= hp %>" max="255"> <%= hp %>% </progress>
             <div class="card-body">
                 <% if (type === "grass") { %>
-                    <p class="card-text" style="color: green">  <%= type %></p>
+                    <p class="card-text" style="color: green; " >  <%= type %></p>
                     <% } else if (type === "water") { %>
                     <p class="card-text" style="color: blue">  <%= type %></p>
                     <% } else if (type === "electric") { %>
@@ -40,7 +63,7 @@
                     <% } else if (type === "rock") { %>
                     <p class="card-text" style="color: gray"> <%= type %></p>
                     <% } else if (type === "bug") { %>
-                    <p class="card-text" style="color: green"> <%= type %></p>
+                    <p class="card-text" style="color: green; border-radius: 12px;"> <%= type %></p>
                     <% } else if (type === "ghost") { %>
                     <p class="card-text" style="color: purple"> <%= type %></p>
                     <% } else if (type === "dragon") { %>
@@ -61,8 +84,8 @@
                 <p class="card-text">Speed: <%= speed %></p>
                 <p class="card-text">Special Attack: <%= specialAttack %></p>
                 <p class="card-text">Special Defense: <%= specialDefense %></p>
-                <!-- add summary -->
-                <!-- <p class="card-text">Summary: <%= summary %></p> -->
+                <p class="card-text">Max HP: <%= maxhp %></p>
+                <p class="card-text">ability: <%= ability %></p>
             </div>
         </div>
     
@@ -71,3 +94,4 @@
 </body>
 
 </html>
+

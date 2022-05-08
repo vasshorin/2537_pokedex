@@ -15,13 +15,17 @@ const colors = {
     psychic: '#eceda1', 
     flying: '#F5F5F5', 
     fighting: '#E6E0D4', 
-    normal: '#F5F5F5'
+    normal: '#F5F5F5',
+    ice: "42ecf5"
 }
 
 // Gets pokemon from pokemon api and displays it in the pokemon div
 function getPokemon(e){
     var entry = document.querySelector("#pokemonEntry").value;
-    if (entry != ''){
+    var searchType = $("#search_type").val();
+    var number = parseInt(entry);
+    // only run if input is a number and search type is id
+    if (searchType == "id" && !isNaN(number)){
         document.querySelector(".pokemon").style.display = "block";
         $("main").empty()
         fetch(`https://pokeapi.co/api/v2/pokemon/${entry}`)
@@ -51,7 +55,58 @@ function getPokemon(e){
                         ${data.stats.map(stat => `<li>${stat.stat.name}: ${stat.base_stat}</li>`).join('')}
                     </ul>
                 </div>
-            
+                <div class="pokemon-info-abilities">
+                    <h3>Abilities:</h3>
+                    <ul>
+                        ${data.abilities.map(ability => `<li>${ability.ability.name}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+            `;
+
+            // change div background color based on type of pokemon
+            var type = data.types[0].type.name;
+            document.querySelector(".pokemon").style.backgroundColor = colors[type];
+        }
+        ).catch(error => console.log(error));
+        // if search type is name and entry is a string and is not a number
+    } else if (searchType == "name" && typeof entry == "string" && isNaN(entry)){
+        console.log("Inside second if" + entry)
+        document.querySelector(".pokemon").style.display = "block";
+        $("main").empty()
+        fetch(`https://pokeapi.co/api/v2/pokemon/${entry}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            document.querySelector(".pokemon").innerHTML = `
+            <div class="pokemon-name">
+                <h1>${data.name}</h1>
+            </div>
+            <div class="pokemon-image">
+                <img src="${data.sprites.other["official-artwork"].front_default}" alt="${data.name}">
+            </div>
+            <div class="pokemon-info">
+                <div class="pokemon-info-name">
+                    <h2>${data.name}</h2>
+                </div>
+                <div class="pokemon-info-type">
+                    <h3>Type:</h3>
+                    <ul>
+                        ${data.types.map(type => `<li>${type.type.name}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="pokemon-info-stats">
+                    <h3>Stats:</h3>
+                    <ul>
+                        ${data.stats.map(stat => `<li>${stat.stat.name}: ${stat.base_stat}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="pokemon-info-abilities">
+                    <h3>Abilities:</h3>
+                    <ul>
+                        ${data.abilities.map(ability => `<li>${ability.ability.name}</li>`).join('')}
+                    </ul>
+                </div>
             </div>
             `;
 
@@ -61,16 +116,14 @@ function getPokemon(e){
         }
         ).catch(error => console.log(error));
     } else {
-        display();
+        console.log("not a number")
     }
 }
 
 
 
-
+// processes the response from the pokemon api and displays it in the pokemon div
 function processPokeResponse(data){
-
-
     if (data.types.length > 0 && data.types[0].type.name == type_g){
         $("main").append(`
         <div class="pokemon-card">
@@ -103,14 +156,13 @@ function processPokeResponse(data){
             var type = data.types[0].type.name;
             document.querySelector("body").style.backgroundColor = colors[type];
     }
-    
 }
 
 
 function display(type_){
     $("main").empty()
     type_g = type_
-    for (i = 1; i < 100; i++){
+    for (i = 1; i < 777; i++){
         // for each pokemon
         $.ajax({
             type: "get",
