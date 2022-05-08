@@ -31,24 +31,38 @@
                     <p class="card-text" style="color: yellow"> <%= type %></p>
                     <% } else if (type === "fire") { %>
                     <p class="card-text" style="color: red"> <%= type %></p>
+                    <% } else if (type === "fairy") { %>
+                    <p class="card-text" style="color: pink"> <%= type %></p>
+                    <% } else if (type === "poison") { %>
+                    <p class="card-text" style="color: purple"> <%= type %></p>
+                    <% } else if (type === "ground") { %>
+                    <p class="card-text" style="color: brown"> <%= type %></p>
+                    <% } else if (type === "rock") { %>
+                    <p class="card-text" style="color: gray"> <%= type %></p>
+                    <% } else if (type === "bug") { %>
+                    <p class="card-text" style="color: green"> <%= type %></p>
+                    <% } else if (type === "ghost") { %>
+                    <p class="card-text" style="color: purple"> <%= type %></p>
+                    <% } else if (type === "dragon") { %>
+                    <p class="card-text" style="color: blue"> <%= type %></p>
+                    <% } else if (type === "steel") { %>
+                    <p class="card-text" style="color: gray"> <%= type %></p>
+                    <% } else if (type === "fight") { %>
+                    <p class="card-text" style="color: red"> <%= type %></p>
                     <% } else { %>
                     <p class="card-text" style="color: grey">  <%= type %></p>
                     <% } %>
+
                 <h5 class="card-title">Name: <%= name %></h5>
                 <p class="card-text">ID: <%= id %></p>
-               
-
                 <p class="card-text">HP: <%= hp %></p>
                 <p class="card-text">Attack: <%= attack %></p>
                 <p class="card-text">Defense: <%= defense %></p>
                 <p class="card-text">Speed: <%= speed %></p>
                 <p class="card-text">Special Attack: <%= specialAttack %></p>
                 <p class="card-text">Special Defense: <%= specialDefense %></p>
-                <p class="card=text">description: <%= description %></p>
-                
-
-                
-
+                <!-- add summary -->
+                <!-- <p class="card-text">Summary: <%= summary %></p> -->
             </div>
         </div>
     

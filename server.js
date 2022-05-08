@@ -5,7 +5,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 
-app.listen(5002, function (err) {
+app.listen(5003, function (err) {
     if (err)
         console.log(err);
 })
@@ -47,7 +47,8 @@ app.get('/profile/:id', function (req, res) {
                 "defense": data.stats[3].base_stat,
                 "speed": data.stats[0].base_stat,
                 "specialAttack": data.stats[2].base_stat,
-                "specialDefense": data.stats[1].base_stat
+                "specialDefense": data.stats[1].base_stat,
+                // "summary": data.species.flavor_text_entries[0].flavor_text
             });
         })
     });
