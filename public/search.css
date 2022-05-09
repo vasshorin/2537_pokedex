@@ -96,7 +96,7 @@ footer{
     text-align: center;
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 600px) {
     /* .img-container {
         width: 100%;
         float: none;
@@ -117,11 +117,16 @@ footer{
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 90%;
     }
     p {
         width: 100%;
         font-size: 18px;
         padding: 0px 5px;
+    }
+    .pokemon {
+        width: 90%;
+        margin: 10px;
     }
 
     #images {

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
- `
+    <link rel="stylesheet" href="/profile.css">
     <title>Document</title>
 </head>
 
@@ -30,11 +30,9 @@
 
         </ul>
     </nav>
+    <div id="content"> 
     <h1> Hi there!
-
-        <!-- make a card with the following params -->
-
-        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);" >
+        <div class="card" >
             <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/<%= id %>.png" alt="">
             <progress id="file" value="<%= hp %>" max="255"> <%= hp %>% </progress>
             <div class="card-body">
@@ -69,18 +67,18 @@
                     <% } %>
 
                 <h5 class="card-title">Name: <%= name %></h5>
-                <p class="card-text">ID: <%= id %></p>
-                <p class="card-text">HP: <%= hp %></p>
-                <p class="card-text">Attack: <%= attack %></p>
-                <p class="card-text">Defense: <%= defense %></p>
-                <p class="card-text">Speed: <%= speed %></p>
-                <p class="card-text">Special Attack: <%= specialAttack %></p>
-                <p class="card-text">Special Defense: <%= specialDefense %></p>
-                <p class="card-text">Max HP: <%= maxhp %></p>
+                <p class="card-text">ID: <%= id %> <progress id="file" value="<%= id %>" max="777"> <%= id %>% </progress></p> 
+                <p class="card-text">HP: <%= hp %> <progress id="file" value="<%= hp %>" max="255"> <%= hp %>% </progress></p>
+                <p class="card-text">Attack: <%= attack %> <progress id="file" value="<%= attack %>" max="526"> <%= attack %>% </progress></p>
+                <p class="card-text">Defense: <%= defense %> <progress id="file" value="<%= defense %>" max="230"> <%= defense %>% </progress></p>
+                <p class="card-text">Speed: <%= speed %> <progress id="file" value="<%= speed %>" max="777"> <%= speed %>% </progress></p>
+                <p class="card-text">Special Attack: <%= specialAttack %> <progress id="file" value="<%= specialAttack %>" max="180"> <%= hp %>% </progress></p>
+                <p class="card-text">Special Defense: <%= specialDefense %> <progress id="file" value="<%= specialDefense %>" max="230"> <%= hp %>% </progress></p>
+                <p class="card-text">Max HP: <%= maxhp %> </p>
                 <p class="card-text">ability: <%= ability %></p>
             </div>
         </div>
-    
+    </div>
 
     </h1>
 </body>

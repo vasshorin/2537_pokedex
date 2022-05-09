@@ -31,7 +31,6 @@ function getPokemon(e){
         fetch(`https://pokeapi.co/api/v2/pokemon/${entry}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             document.querySelector(".pokemon").innerHTML = `
             <div class="pokemon-name">
                 <h1>${data.name}</h1>
@@ -114,7 +113,7 @@ function getPokemon(e){
         }
         ).catch(error => console.log(error));
     } else {
-        console.log("not a number")
+        display();
     }
 }
 
@@ -123,14 +122,15 @@ function getPokemon(e){
 // processes the response from the pokemon api and displays it in the pokemon div
 function processPokeResponse(data){
     if (data.types.length > 0 && data.types[0].type.name == type_g){
-        let length = data.types.length;
-        console.log(length)
         $("main").append(`
         <div class="pokemon-card">
             <div class="pokemon-card-image">
                 <img src="${data.sprites.other["official-artwork"].front_default}" alt="${data.name}">
             </div>
             <div class="pokemon-card-info">
+                <div class="pokemon-card-info-id">
+                    <h3>ID: ${data.id}</h3>
+                </div>
                 <div class="pokemon-card-info-name">
                     <h2>Name:${data.name} weight: ${data.weight} height: ${data.height}</h2>
                 </div>
@@ -158,7 +158,7 @@ function processPokeResponse(data){
     }
 }
 
-
+// run for loop for the type chosen and pass data to processPokeResponse
 function display(type_){
     $("main").empty()
     type_g = type_
@@ -174,23 +174,22 @@ function display(type_){
 
 
 function setup(){
-
+    // display pokemon of type
     display($("#poke_type option:selected").val());
     $("#poke_type").change(() => {
         poke_type = $("#poke_type option:selected").val();
         display(poke_type); 
       })
 
-      $("#pokemonEntry").keyup(() => {
-        getPokemon();
-        //if input is empty, hide pokemon div
+    $("#search").click(() => {
+        getPokemon($("#search_entry").val(), $("#search_type").val());
         if ($("#pokemonEntry").val() == ''){
             document.querySelector(".pokemon").style.display = "none";
             display($("#poke_type option:selected").val());
         } else {
             document.querySelector("body").style.backgroundColor = "white";
         }
-        });
+    });
 }
 
 
