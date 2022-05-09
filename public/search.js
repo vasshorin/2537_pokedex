@@ -125,6 +125,8 @@ function getPokemon(e){
 // processes the response from the pokemon api and displays it in the pokemon div
 function processPokeResponse(data){
     if (data.types.length > 0 && data.types[0].type.name == type_g){
+        let length = data.types.length;
+        console.log(length)
         $("main").append(`
         <div class="pokemon-card">
             <div class="pokemon-card-image">
