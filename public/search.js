@@ -25,7 +25,7 @@ function getPokemon(e){
     var searchType = $("#search_type").val();
     var number = parseInt(entry);
     // only run if input is a number and search type is id
-    if (searchType == "id" && !isNaN(number)){
+    if (searchType == "id" && !isNaN(number) && number > 0 && number < 778){
         document.querySelector(".pokemon").style.display = "block";
         $("main").empty()
         fetch(`https://pokeapi.co/api/v2/pokemon/${entry}`)
@@ -71,13 +71,11 @@ function getPokemon(e){
         ).catch(error => console.log(error));
         // if search type is name and entry is a string and is not a number
     } else if (searchType == "name" && typeof entry == "string" && isNaN(entry)){
-        console.log("Inside second if" + entry)
         document.querySelector(".pokemon").style.display = "block";
         $("main").empty()
         fetch(`https://pokeapi.co/api/v2/pokemon/${entry}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             document.querySelector(".pokemon").innerHTML = `
             <div class="pokemon-name">
                 <h1>${data.name}</h1>

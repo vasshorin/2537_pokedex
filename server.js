@@ -10,11 +10,6 @@ app.listen(process.env.PORT || 5000, function (err) {
         console.log(err);
 })
 
-// app.get('/', function (req, res) {
-//     res.send('<h1> GET request to homepage </h1>')    
-// })
-
-
 const https = require('https');
 
 
