@@ -4,7 +4,7 @@ var formatted = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
 function loadEventsToMainDiv() {
     var post = 1;
     $.ajax({
-        url: "http://localhost:5003/timeline/getAllEvents",
+        url: "https://desolate-refuge-07915.herokuapp.com/timelinetimeline/getAllEvents",
         type: "get",
         success: (r)=>{
             console.log(r)
@@ -42,7 +42,7 @@ function submitForm() {
     var time = formatted;
     var hits = 1;
     $.ajax({
-        url: "http://localhost:5003/timeline/insert",
+        url: "https://desolate-refuge-07915.herokuapp.com/timeline/insert",
         type: "put",
         data: {
             text: text,
@@ -63,7 +63,7 @@ function submitForm() {
 function deleteEvent(){
     x = this.id
     $.ajax({
-        url: `http://localhost:5003/timeline/delete/${x}`,
+        url: `https://desolate-refuge-07915.herokuapp.com/timeline/delete/${x}`,
         type: "get",
         success: (r)=>{
             console.log(r)
@@ -77,7 +77,7 @@ function deleteEvent(){
 function increaseHits(){
     x = this.id
     $.ajax({
-        url: `http://localhost:5003/timeline/inscreaseHits/${x}`,
+        url: `https://desolate-refuge-07915.herokuapp.com/timeline/inscreaseHits/${x}`,
         type: "get",
         success: function (x){
             console.log(x)
