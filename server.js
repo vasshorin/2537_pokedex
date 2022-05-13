@@ -5,11 +5,11 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 const bodyparser = require("body-parser");
 
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Our app is running on port ${ PORT }`);
+});
 
-app.listen(process.env.PORT || 5003, function (err) {
-    if (err)
-        console.log(err);
-})
 // app.listen(5003, function (err) {
 //     if (err)
 //         console.log(err);
