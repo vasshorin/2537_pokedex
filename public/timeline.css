@@ -1,0 +1,51 @@
+/* center elemnts in body */
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  /* overflow: hidden; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(166, 222, 228);
+}
+
+.post {
+    margin: 2% 2%; 
+}
+#form {
+    width: 50%;
+}
+
+#text {
+    width: 100%;
+    height: 50px;
+}
+
+main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.post {
+    border: 1px solid black;
+    width: 75vw;
+    height: 100%;
+
+}
+
+#likes {
+    font-weight: bold;
+    color: red;
+}
+
+#time {
+    font-style: italic;
+    color: rgb(7, 76, 84);
+}

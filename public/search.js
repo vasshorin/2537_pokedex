@@ -1,4 +1,6 @@
 type_g = ''
+var now = new Date(Date.now());
+var formatted = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
 // Colors for pokemon types
 const colors = {
@@ -172,6 +174,20 @@ function display(type_){
     }
 }
 
+function addNewEvent(poke_type) {
+    $.ajax({
+        url: "http://localhost:5003/timeline/insert",
+        type: "put",
+        data:{
+            text: `A user seartched for ${poke_type}`,
+            time: new Date().toISOString(),
+            hits: 1
+        },
+        success: function(data) {
+            console.log(data);
+        }
+    });
+}
 
 function setup(){
     // display pokemon of type
@@ -179,6 +195,7 @@ function setup(){
     $("#poke_type").change(() => {
         poke_type = $("#poke_type option:selected").val();
         display(poke_type); 
+        addNewEvent(poke_type);
       })
 
     $("#search").click(() => {
