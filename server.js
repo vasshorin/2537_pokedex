@@ -22,8 +22,9 @@ app.use(bodyparser.urlencoded({
     extended: true
 }));
 
-mongoose.connect("mongodb://localhost:27017/timelineDB",
+mongoose.connect("mongodb+srv://vasshorin:12345@cluster0.etygx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true });
+
 const timelineSchema = new mongoose.Schema({
     text: String,
     hits: Number,
@@ -78,7 +79,6 @@ app.get('/timeline/delete/:id', function (req, res) {
 
 
 app.get('/timeline/inscreaseHits/:id', function (req, res) {
-    // console.log(req.body)
     timelineModel.updateOne({
         '_id': req.params.id
     },{
