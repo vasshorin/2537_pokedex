@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 app.set('view engine', 'ejs');
 // use public forlder for css
-app.use(express.static('public'));
+app.use(express.static('/public'));
 const bodyparser = require("body-parser");
 
 const PORT = process.env.PORT || 5000;
