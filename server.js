@@ -6,14 +6,14 @@ app.use(express.static('public'));
 const bodyparser = require("body-parser");
 
 
-// app.listen(process.env.PORT || 5003, function (err) {
-//     if (err)
-//         console.log(err);
-// })
-app.listen(5003, function (err) {
+app.listen(process.env.PORT || 5003, function (err) {
     if (err)
         console.log(err);
 })
+// app.listen(5003, function (err) {
+//     if (err)
+//         console.log(err);
+// })
 
 const https = require('https');
 const mongoose = require('mongoose');
