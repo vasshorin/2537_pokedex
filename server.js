@@ -2,8 +2,18 @@ const express = require('express')
 const app = express()
 app.set('view engine', 'ejs');
 // use public forlder for css
-app.use(express.static('./public'));
 const bodyparser = require("body-parser");
+var session = require('express-session');
+const https = require('https');
+const mongoose = require('mongoose');
+const { allowedNodeEnvironmentFlags, nextTick } = require('process');
+const req = require('express/lib/request');
+const res = require('express/lib/response');
+const { escapeRegExpChars } = require('ejs/lib/utils');
+
+// Use the session middleware
+app.use(session({secret: "ssshhhhh", saveUninitialized: true, resave: true}));
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
@@ -15,9 +25,8 @@ app.listen(PORT, () => {
 //         console.log(err);
 // })
 
-const https = require('https');
-const mongoose = require('mongoose');
 
+// _________________________________DATA BASE_________________________________________
 app.use(bodyparser.urlencoded({
     extended: true
 }));
@@ -25,13 +34,106 @@ app.use(bodyparser.urlencoded({
 mongoose.connect("mongodb+srv://testUser:testUser@cluster0.etygx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true });
 
-const timelineSchema = new mongoose.Schema({
-    text: String,
-    hits: Number,
-    time: String
-});
-const timelineModel = mongoose.model("timelineevents", timelineSchema);
+// const timelineSchema = new mongoose.Schema({
+//     text: String,
+//     hits: Number,
+//     time: String
+// });
+// const timelineModel = mongoose.model("timelineevents", timelineSchema);
+// const users = new mongoose.Schema({
+//     username: String,
+//     password: String,
+//     shoppingCart: [
+//         {
+//             pokeCardID: String,
+//             quantity: Number,
+//             price: Number
+//         }
+//     ]
+// });
+// const userModel = mongoose.model("users", users);
 
+
+
+// Signup
+app.get("/signup", function (req, res) {
+    //Create sign up form here and send it to mongoDB
+    res.render("signup");
+
+});
+// ______________________________________LOGIN __________________________________________________________
+users = [
+    {
+        "username": "user1",
+        "password": "password1",
+        "shoppingCart": [
+            {
+                pokeCardID: 25,
+                quantity: 2,
+                price: 24.2
+            },{
+                
+                pokeCardID: 30,
+                quantity: 1,
+                price: 12
+            }
+            ]
+    }, {
+        "username": "user2",
+        "password": "password2",
+    }
+]
+
+function logger1(x,y, next) {
+    console.log("logger1 called");
+    next()
+}
+
+function auth(req , res, next) {
+    if (req.session.authenticated) {
+        console.log("authenticated");
+        next()
+    } else {
+        res.redirect("/login")
+    }
+}
+// app.use(auth)
+
+app.get('/', auth, function (req, res) {
+    tmp = ''
+    tmp += `Hi ${req.session.username}! `
+    tmp += "Welcome to the home page"
+    res.send(tmp)
+});
+
+app.get('/login', function (req, res) {
+    res.send('Hello, login page!');
+});
+
+app.get('/userProfile/:name', auth, function (req, res) {
+    tmp = ''
+    tmp += `Hi ${req.params.name} !`
+    tmp += JSON.stringify(users.filter(user => user.username == req.params.name)[0].shoppingCart)
+    res.send(tmp)
+})
+
+
+app.get('/login/:username/:password', function (req, res) {
+    if (users.filter(user => user.username == req.params.username && user.password == req.params.password).length > 0) {
+        req.session.authenticated = true;
+        req.session.username = req.params.username;
+        res.redirect('/userProfile/' + req.params.username)
+    } else {
+        req.session.authenticated = false;
+        res.send("Wrong username or password")
+}
+});
+
+
+
+
+
+// ______________________________________TIMELINE__________________________________________________________
 
 app.get('/timeline/getAllEvents', function (req, res) {
     timelineModel.find({}, function (err, data) {
@@ -94,15 +196,6 @@ app.get('/timeline/inscreaseHits/:id', function (req, res) {
 })
 
 
-app.use(express.static('./public'));
-
-app.use(bodyparser.urlencoded({
-    parameterLimit: 100000,
-    limit: '50mb',
-    extended: true
-}));
-
-
 app.get('/timeline', function (req, res) {
     timelineModel.find({}, function (err, timelineLogs) {
         if (err) {
@@ -142,11 +235,16 @@ app.get('/timeline/update/:id', function (req, res) {
     
 })
 
+app.use(bodyparser.urlencoded({
+    parameterLimit: 100000,
+    limit: '50mb',
+    extended: true
+}));
 
 
+// ______________________________________PROFILE__________________________________________________________
 app.get('/profile/:id', function (req, res) {
 
-    // var pokemon = res.sendFile(__dirname + '/public/' + req.params.id + '.json');
     const url = `https://pokeapi.co/api/v2/pokemon/${req.params.id}`;
     data = ""
     https.get(pokemon, function (https_res) {
@@ -180,22 +278,5 @@ app.get('/profile/:id', function (req, res) {
             
         })
     });
-
-
-
-
-    // res.json({
-    //     "k1": "v1",
-
-    //     "k2": "v1",
-
-    //     "k3": "v1"
-
-    // })
-
-
-// app.get('/', function(req, res) {
-//     res.sendFile(__dirname + "/index.html");
-//   })
 
 app.use('./public', express.static('public'));
