@@ -16,6 +16,7 @@ const { escapeRegExpChars } = require('ejs/lib/utils');
 // ---------------
 // --- APP USE---
 // ---------------
+
 app.use(express.static('./public'));
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(session({

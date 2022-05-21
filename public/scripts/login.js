@@ -16,6 +16,7 @@ async function authenticateUser() {
 }
 
 function setup() {
+    console.log("setup")
     $('body').on('click', '#login', authenticateUser)
 }
 
