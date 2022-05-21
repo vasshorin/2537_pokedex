@@ -48,41 +48,54 @@ const timelineModel = mongoose.model("timelineevents", timelineSchema);
 
 // User Schema
 const userSchema = new mongoose.Schema({
-    username: String,
     firstName: String,
     lastName: String,
     email: String,
+    username: String,
     password: String,
-    time: String
+    time: String,
+    shoppingCart: [
+        {
+            pokemonID: String,
+            quantity: Number,
+            price: Number
+        }
+    ]
 });
 const userModel = mongoose.model("users", userSchema);
 
 
-// Signup
-app.get("/signup", function (req, res) {
-    //Create sign up form here and send it to mongoDB
-    res.render("signup");
-});
-
 function auth(req , res, next) {
     if (req.session.authenticated) {
         console.log("authenticated");
+        res.redirect('/');
         next()
     } else {
         res.redirect("/login")
     }
 }
 
-app.get('/', auth, function (req, res) {
+
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + "/public/pages/index.html");
+  });
+
+app.get('/login', function(req, res) {
+    res.sendFile(__dirname + "/public/pages/login.html");
+  });
+
+
+
+app.get('/lol', auth, function (req, res) {
     tmp = ''
     tmp += `Hi ${req.session.username}! `
     tmp += "Welcome to the home page"
     res.send(tmp)
-});
+}); 
 
-app.get('/login', function (req, res) {
-    res.send('Hello, login page!');
-});
+// app.get('/login', function (req, res) {
+//     res.send('Hello, login page!');
+// });
 
 app.get('/userProfile/:name', auth, function (req, res) {
     tmp = ''
@@ -95,13 +108,14 @@ app.get('/userProfile/:name', auth, function (req, res) {
 app.get('/login/:username/:password', function (req, res) {
     if (users.filter(user => user.username == req.params.username && user.password == req.params.password).length > 0) {
         req.session.authenticated = true;
-        req.session.username = req.params.username;
+        req.session.username = req.params.username
         res.redirect('/userProfile/' + req.params.username)
     } else {
         req.session.authenticated = false;
         res.send("Wrong username or password")
 }
 });
+
 
 // ----------------
 // ----  LOGIN ----
@@ -110,9 +124,9 @@ app.get('/login/:username/:password', function (req, res) {
 app.post('/login/authentication', function (req, res, next) {
     userModel.find({}, function (err, users) {
         if (err) {
-            console.log('Error' + err)
+            console.log('Login Error' + err)
         } else {
-            console.log('Data' + users)
+            console.log('Login Data' + users)
         }
 
         user=users.filter((userobj)=>{
@@ -122,14 +136,16 @@ app.post('/login/authentication', function (req, res, next) {
             req.session.authenticated = true
             req.session.email = req.body.email
             req.session.userId = user[0]._id
+            req.session.username = user[0].username
+            req.session.firstName = user[0].firstName
+            req.session.lastName = user[0].lastName
             req.session.userobj = user[0]
             // LoggedInUserID = req.session.userId
-            res.send("Successful Login!" + req.session.userobj + "user id: " + req.session.userId)
+            res.send(req.session.userobj) 
         }
 
     })
 })
-
 
 // ----------------
 // ----  SIGNUP ----
@@ -138,17 +154,18 @@ app.post('/login/authentication', function (req, res, next) {
 app.put('/signup/create', function (req, res) {
     console.log(req.body)
     userModel.create({
-        username: req.body.username,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
+        username: req.body.username,
         password: req.body.password,
-        time: req.body.time
+        time: req.body.time,
+        shoppingCart: req.body.shoppingCart
     }, function (err, data) {
         if (err) {
             console.log('Error' + err)
         } else {
-            console.log('Data' + data)
+            console.log('SINGUP Data' + data)
         }
         res.send("New user created!")
     })

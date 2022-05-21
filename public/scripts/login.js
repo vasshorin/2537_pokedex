@@ -10,13 +10,16 @@ async function authenticateUser() {
             password: password
         },
         success: (x) => {
-            console.log("extra" + x)
+            console.log(x)
+            console.log(Object.values(x))
+            console.log("_------------------")
+            console.log(Object.keys(x))
         }
     })
 }
 
 function setup() {
-    console.log("setup")
+    console.log("setup12321")
     $('body').on('click', '#login', authenticateUser)
 }
 

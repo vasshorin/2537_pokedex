@@ -5,17 +5,24 @@ async function storeNewUser() {
     newUsername = $('#newUsername').val()
     newPassword = $('#newPassword').val()
     currentTime = new Date()
-    // console.log(newFirstName, newLastName, newAge, newUserEmail, newUsername, newPassword, newLocation, currentTime)
+    console.log(newFirstName, newLastName, newUserEmail, newUsername, newPassword, currentTime)
     await $.ajax({
         url: 'http://localhost:5003/signup/create',
         type: 'PUT',
         data: {
-            firstname: newFirstName,
-            lastname: newLastName,
+            firstName: newFirstName,
+            lastName: newLastName,
             email: newUserEmail,
             username: newUsername,
             password: newPassword,
-            time: currentTime
+            time: currentTime,
+            shoppingCart: [
+                {
+                    pokemonID: "",
+                    quantity: 0,
+                    price: 0
+                }
+            ]
         },
         success: (x) => {
             console.log(x)
