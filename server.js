@@ -1,7 +1,9 @@
+// ---------------
+// --- CONSTS  ---
+// ---------------
 const express = require('express')
 const app = express()
 app.set('view engine', 'ejs');
-// use public forlder for css
 const bodyparser = require("body-parser");
 var session = require('express-session');
 const https = require('https');
@@ -11,83 +13,55 @@ const req = require('express/lib/request');
 const res = require('express/lib/response');
 const { escapeRegExpChars } = require('ejs/lib/utils');
 
-// Use the session middleware
-app.use(session({secret: "ssshhhhh", saveUninitialized: true, resave: true}));
+// ---------------
+// --- APP USE---
+// ---------------
+app.use(express.static('./public'));
+app.use(bodyparser.urlencoded({ extended: true }));
+app.use(session({
+    secret: 'ssshhhhh',
+    saveUninitialized: true,
+    resave: true
+}))
 
-
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
 });
 
-// app.listen(5003, function (err) {
-//     if (err)
-//         console.log(err);
-// })
 
-
-// _________________________________DATA BASE_________________________________________
-app.use(bodyparser.urlencoded({
-    extended: true
-}));
+// ---------------------------
+// --- MONGOOSE CONNECTION ---
+// ---------------------------
 
 mongoose.connect("mongodb+srv://testUser:testUser@cluster0.etygx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true });
 
-// const timelineSchema = new mongoose.Schema({
-//     text: String,
-//     hits: Number,
-//     time: String
-// });
-// const timelineModel = mongoose.model("timelineevents", timelineSchema);
-// const users = new mongoose.Schema({
-//     username: String,
-//     password: String,
-//     shoppingCart: [
-//         {
-//             pokeCardID: String,
-//             quantity: Number,
-//             price: Number
-//         }
-//     ]
-// });
-// const userModel = mongoose.model("users", users);
+// Timeline Schema
+const timelineSchema = new mongoose.Schema({
+    text: String,
+    hits: Number,
+    time: String
+});
+const timelineModel = mongoose.model("timelineevents", timelineSchema);
 
+// User Schema
+const userSchema = new mongoose.Schema({
+    username: String,
+    firstName: String,
+    lastName: String,
+    email: String,
+    password: String,
+    time: String
+});
+const userModel = mongoose.model("users", userSchema);
 
 
 // Signup
 app.get("/signup", function (req, res) {
     //Create sign up form here and send it to mongoDB
     res.render("signup");
-
 });
-// ______________________________________LOGIN __________________________________________________________
-users = [
-    {
-        "username": "user1",
-        "password": "password1",
-        "shoppingCart": [
-            {
-                pokeCardID: 25,
-                quantity: 2,
-                price: 24.2
-            },{
-                
-                pokeCardID: 30,
-                quantity: 1,
-                price: 12
-            }
-            ]
-    }, {
-        "username": "user2",
-        "password": "password2",
-    }
-]
-
-function logger1(x,y, next) {
-    console.log("logger1 called");
-    next()
-}
 
 function auth(req , res, next) {
     if (req.session.authenticated) {
@@ -97,7 +71,6 @@ function auth(req , res, next) {
         res.redirect("/login")
     }
 }
-// app.use(auth)
 
 app.get('/', auth, function (req, res) {
     tmp = ''
@@ -129,111 +102,61 @@ app.get('/login/:username/:password', function (req, res) {
 }
 });
 
+// ----------------
+// ----  LOGIN ----
+// ----------------
 
-
-
-
-// ______________________________________TIMELINE__________________________________________________________
-
-app.get('/timeline/getAllEvents', function (req, res) {
-    timelineModel.find({}, function (err, data) {
+app.post('/login/authentication', function (req, res, next) {
+    userModel.find({}, function (err, users) {
         if (err) {
-            console.log("Error " + err);
+            console.log('Error' + err)
         } else {
-            console.log("Data " + data);
-            console.log("Time" + Date.now());
+            console.log('Data' + users)
         }
-        res.send(data);
-    });
+
+        user=users.filter((userobj)=>{
+            return userobj.email == req.body.email
+        })
+        if (user[0].password==req.body.password){
+            req.session.authenticated = true
+            req.session.email = req.body.email
+            req.session.userId = user[0]._id
+            req.session.userobj = user[0]
+            // LoggedInUserID = req.session.userId
+            res.send("Successful Login!" + req.session.userobj + "user id: " + req.session.userId)
+        }
+
+    })
 })
 
 
-// put request to add new event
-app.put('/timeline/insert', function (req, res) {
+// ----------------
+// ----  SIGNUP ----
+// ----------------
+
+app.put('/signup/create', function (req, res) {
     console.log(req.body)
-    timelineModel.create({
-        'text': req.body.text,
-        'time': req.body.time,
-        'hits': req.body.hits
+    userModel.create({
+        username: req.body.username,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        password: req.body.password,
+        time: req.body.time
     }, function (err, data) {
         if (err) {
-            console.log("Error " + err);
+            console.log('Error' + err)
         } else {
-            console.log("Data " + data);
+            console.log('Data' + data)
         }
-        res.send("Insertion is successful!");
-    });
-})
-
-app.get('/timeline/delete/:id', function (req, res) {
-    // console.log(req.body)
-    timelineModel.remove({
-        '_id': req.params.id
-    }, function (err, data) {
-        if (err) {
-            console.log("Error " + err);
-        } else {
-            console.log("Data " + data);
-        }
-        res.send("Delete request is successful!");
-    });
+        res.send("New user created!")
+    })
 })
 
 
-app.get('/timeline/inscreaseHits/:id', function (req, res) {
-    timelineModel.updateOne({
-        '_id': req.params.id
-    },{
-        $inc: {'hits': 1}
-    } ,function (err, data) {
-        if (err) {
-            console.log("Error " + err);
-        } else {
-            console.log("Data " + data);
-        }
-        res.send("Update request is successful!");
-    });
-})
-
-
-app.get('/timeline', function (req, res) {
-    timelineModel.find({}, function (err, timelineLogs) {
-        if (err) {
-            console.log("Error " + err);
-        } else {
-            console.log("Data " + JSON.stringify(timelineLogs));
-        }
-        res.send(JSON.stringify(timelineLogs));
-    });
-})
-
-
-app.put('/timeline/delete/:id', function (req, res) {
-    timelineModel.deleteOne({
-        id: req.params.id
-    }, function (err, data) {
-        if (err) console.log(err);
-        else
-            console.log(data);
-        res.send("All good! Deleted.")
-    });
-})
-
-
-
-app.get('/timeline/update/:id', function (req, res) {
-    timelineModel.updateOne({
-        id: req.params.id
-    }, {
-        $inc: { hits: 1 }
-    }, function (err, data) {
-        if (err) console.log(err);
-        else
-            console.log(data);
-        res.send("All good! Updated.")
-    });
-    
-})
+// ----------------
+// --- TIMELINE ---
+// ----------------
 
 app.use(bodyparser.urlencoded({
     parameterLimit: 100000,
@@ -242,7 +165,10 @@ app.use(bodyparser.urlencoded({
 }));
 
 
-// ______________________________________PROFILE__________________________________________________________
+
+// ----------------
+// --- Profile  ---
+// ----------------
 app.get('/profile/:id', function (req, res) {
 
     const url = `https://pokeapi.co/api/v2/pokemon/${req.params.id}`;
