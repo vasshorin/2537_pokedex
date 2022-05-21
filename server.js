@@ -1,30 +1,32 @@
+// ---------------
+// --- ROUTES  ---
+// ---------------
+
 const express = require('express')
 const app = express()
-app.set('view engine', 'ejs');
-// use public forlder for css
-app.use(express.static('./public'));
 const bodyparser = require("body-parser");
+const https = require('https');
+const mongoose = require('mongoose');
+app.set('view engine', 'ejs');
+app.use(express.static('./public'));
 
 const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
 });
 
-// app.listen(5003, function (err) {
-//     if (err)
-//         console.log(err);
-// })
-
-const https = require('https');
-const mongoose = require('mongoose');
-
 app.use(bodyparser.urlencoded({
     extended: true
 }));
 
+// ---------------------------
+// --- MONGOOSE CONNECTION ---
+// ---------------------------
+
 mongoose.connect("mongodb+srv://testUser:testUser@cluster0.etygx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true });
 
+// Timeline schema
 const timelineSchema = new mongoose.Schema({
     text: String,
     hits: Number,
@@ -32,69 +34,19 @@ const timelineSchema = new mongoose.Schema({
 });
 const timelineModel = mongoose.model("timelineevents", timelineSchema);
 
-
-app.get('/timeline/getAllEvents', function (req, res) {
-    timelineModel.find({}, function (err, data) {
-        if (err) {
-            console.log("Error " + err);
-        } else {
-            console.log("Data " + data);
-            console.log("Time" + Date.now());
-        }
-        res.send(data);
-    });
-})
+// User Schema
+const userSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    password: String,
+});
+const userModel = mongoose.model("users", userSchema);
 
 
-// put request to add new event
-app.put('/timeline/insert', function (req, res) {
-    console.log(req.body)
-    timelineModel.create({
-        'text': req.body.text,
-        'time': req.body.time,
-        'hits': req.body.hits
-    }, function (err, data) {
-        if (err) {
-            console.log("Error " + err);
-        } else {
-            console.log("Data " + data);
-        }
-        res.send("Insertion is successful!");
-    });
-})
+// ----------------
+// --- TIMELINE ---
+// ----------------
 
-app.get('/timeline/delete/:id', function (req, res) {
-    // console.log(req.body)
-    timelineModel.remove({
-        '_id': req.params.id
-    }, function (err, data) {
-        if (err) {
-            console.log("Error " + err);
-        } else {
-            console.log("Data " + data);
-        }
-        res.send("Delete request is successful!");
-    });
-})
-
-
-app.get('/timeline/inscreaseHits/:id', function (req, res) {
-    timelineModel.updateOne({
-        '_id': req.params.id
-    },{
-        $inc: {'hits': 1}
-    } ,function (err, data) {
-        if (err) {
-            console.log("Error " + err);
-        } else {
-            console.log("Data " + data);
-        }
-        res.send("Update request is successful!");
-    });
-})
-
-
-app.use(express.static('./public'));
 
 app.use(bodyparser.urlencoded({
     parameterLimit: 100000,
@@ -103,47 +55,9 @@ app.use(bodyparser.urlencoded({
 }));
 
 
-app.get('/timeline', function (req, res) {
-    timelineModel.find({}, function (err, timelineLogs) {
-        if (err) {
-            console.log("Error " + err);
-        } else {
-            console.log("Data " + JSON.stringify(timelineLogs));
-        }
-        res.send(JSON.stringify(timelineLogs));
-    });
-})
-
-
-app.put('/timeline/delete/:id', function (req, res) {
-    timelineModel.deleteOne({
-        id: req.params.id
-    }, function (err, data) {
-        if (err) console.log(err);
-        else
-            console.log(data);
-        res.send("All good! Deleted.")
-    });
-})
-
-
-
-app.get('/timeline/update/:id', function (req, res) {
-    timelineModel.updateOne({
-        id: req.params.id
-    }, {
-        $inc: { hits: 1 }
-    }, function (err, data) {
-        if (err) console.log(err);
-        else
-            console.log(data);
-        res.send("All good! Updated.")
-    });
-
-})
-
-
-
+// ----------------
+// --- Profile  ---
+// ----------------
 app.get('/profile/:id', function (req, res) {
 
     // var pokemon = res.sendFile(__dirname + '/public/' + req.params.id + '.json');
@@ -180,116 +94,3 @@ app.get('/profile/:id', function (req, res) {
             
         })
     });
-
-
-
-
-    // res.json({
-    //     "k1": "v1",
-
-    //     "k2": "v1",
-
-    //     "k3": "v1"
-
-    // })
-
-
-// app.get('/', function(req, res) {
-//     res.sendFile(__dirname + "/index.html");
-//   })
-
-// app.use('./public', express.static('public'));
-
-// const express = require('express')
-// const app = express()
-// app.set('view engine', 'ejs');
-// const https = require('https');
-// const bodyparser = require("body-parser");
-// const mongoose = require('mongoose');
-// app.use(bodyparser.urlencoded({
-//     extended: true
-// }));
-
-// mongoose.connect("mongodb+srv://testUser:testUser@cluster0.etygx.mongodb.net/pkmSchema?retryWrites=true&w=majority", {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// });
-
-// const pokeSch = new mongoose.Schema({
-//     id: Number,
-//     name: String
-// });
-
-// const pokemonModel = mongoose.model("pokemonmodels", pokeSch);
-// const apiTypeModel = mongoose.model("api_types", pokemonSchema);
-// const typeModel = mongoose.model("types", pokeSch);
-
-// app.listen(process.env.PORT || 5000, function (err) {
-//     if (err) console.log(err);
-// }
-
-// app.listen(5003, function (err) {
-//     if (err)
-//         console.log(err);
-// })
-
-
-// app.get('/',function(req,res){
-//     res.send("<p>To access pokemon: /api/pokemon/:id</P><br><p>To access type: /api/type/:id</p>")
-// })
-
-// R
-// app.get('/api/pokemon/:id', function (req, res) {
-//             // z  = data.stats.filter(function (obj){
-//             //     return obj.stat.name == "hp"
-//             // }).map((obj2)=>{
-//             //     return obj2.base_stat
-//             // })
-//                     // console.log(t)
-//     pokemonModel.find({
-//         id: req.params.id
-//     }, function (err, data) {
-//         if (err) {
-//             console.log("Error " + err);
-//         } else {
-//             console.log("Data " + data);
-//         }
-//         res.send(data);
-//     });
-// })
-
-// app.get('/api/type', function (req, res) {
-//     typeModel.find({}, function (err, data) {
-//         if (err) {
-//             console.log("Error " + err);
-//         } else {
-//             console.log("Data " + data);
-//         }
-//         res.send(data);
-//     });
-// })
-
-// app.get('/api/getAll', function (req, res) {
-//     pokemonModel.find({}, function (err, data) {
-//         if (err) {
-//             console.log("Error " + err);
-//         } else {
-//             console.log("Data " + data);
-//             console.log("Time");
-//         }
-//         res.send(data);
-//     });
-// })
-
-// app.get('/api/type/:id', function (req, res) {
-//     typeModel.find({
-//         id: req.params.id
-//     }, function (err, data) {
-//         if (err) {
-//             console.log("Error " + err);
-//         } else {
-//             console.log("Data " + data);
-//         }
-//         res.send(data);
-//     });
-// })
